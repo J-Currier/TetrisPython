@@ -1,1 +1,3 @@
-#tetris game
+#tetris game 
+
+print("Welcome to my game")
