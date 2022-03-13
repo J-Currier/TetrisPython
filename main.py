@@ -175,6 +175,22 @@ def draw_text_middle(text, size, color, surface):
     pass
    
 def draw_grid(surface, grid):
+    
+    for i in range(len(grid[i])):
+        #pygame.draw.rect(surface, colour, coordinates-start at 0,0 (top left x/y) and move 30 to the right or down based on which square (j/i) we are on, width, height, fill)
+        pygame.draw.rect(surface, grid[i][j], top_left_x + j*block_size, top_left_y + i*block_size, block_size, block_size, 0))
+
+    #draw border rectangle (surface, colour, (coordinatesx, y, width, height), border size)
+    pygame.draw.rect(surface, (255, 0, 0), (top_left_x, top_left_y, play_width, play_height), 4)
+    
+ 
+def clear_rows(grid, locked):
+ 
+ 
+def draw_next_shape(shape, surface):
+ 
+ 
+def draw_window(surface, grid):
     #fill with black
     surface.fill((0, 0, 0))
 
@@ -187,26 +203,10 @@ def draw_grid(surface, grid):
     #label placement (x, y) change! clean up formula
     surface.blit(label, (top_left_x + play_width/2 - label.get_width()/2, 30))
 
-    for i in range(len(grid[i])):
-        #pygame.draw.rect(surface, colour, coordinates-start at 0,0 (top left x/y) and move 30 to the right or down based on which square (j/i) we are on, width, height, fill)
-        pygame.draw.rect(surface, grid[i][j], top_left_x + j*block_size, top_left_y + i*block_size, block_size, block_size, 0))
+    draw_grid(surface, grid)
 
-    #draw border rectangle (surface, colour, (coordinatesx, y, width, height), border size)
-    pygame.draw.rect(surface, (255, 0, 0), (top_left_x, top_left_y, play_width, play_height), 4)
     #update screen
     pygame.display.update()
-
-    
-
- 
-def clear_rows(grid, locked):
- 
- 
-def draw_next_shape(shape, surface):
- 
- 
-def draw_window(surface):
-    pass
  
 def main():
     pass
