@@ -159,7 +159,25 @@ def create_grid(locked_positions={}):
     return grid
  
 def convert_shape_format(shape):
-    pass
+    #tell what shape looks like and where in grid it exists
+    positions = []
+    # gives orientation of shape change! format might be a key word
+    format = shape.shape[shape.rotation % len(shape.shape)]
+
+    for i, line in enumerate(format):
+        row - list(line)
+        for j, column in enumerate(row):
+            #line ex. '..00.' shape position is equivilent to top left "corner" of list of lists, so adding the j (column) to x to get proper square that is occupied by a brick in the shape, and like-wise adding i (row) of the brick to the shape location
+            if column == '0':
+                positions.append((shape.x + j, shape.y + i))
+        
+        #offsetting occupied space makes up for leading ... in the shape location lists of lists LU! ~38
+        for i, pos, in enumerate(positions);
+            positions[i] = (pos[0] - 2, pos[1] - 4)
+
+
+
+
  
 def valid_space(shape, grid):
     pass
