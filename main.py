@@ -176,13 +176,18 @@ def draw_text_middle(text, size, color, surface):
     pass
    
 def draw_grid(surface, grid):
-    
-    for i in range(len(grid[i])):
-        #pygame.draw.rect(surface, colour, coordinates-start at 0,0 (top left x/y) and move 30 to the right or down based on which square (j/i) we are on, width, height, fill)
-        pygame.draw.rect(surface, grid[i][j], top_left_x + j*block_size, top_left_y + i*block_size, block_size, block_size, 0))
+    # draws lines on grid
+    sx = top_left_x
+    sy = top_left_y
 
-    #draw border rectangle (surface, colour, (coordinatesx, y, width, height), border size)
-    pygame.draw.rect(surface, (255, 0, 0), (top_left_x, top_left_y, play_width, play_height), 4)
+    for i in range(len(grid)):
+        #change! check formula. Drawing Vertical lines
+        pygame.draw.line(surface, (128, 128, 128), (sx, sy + i * block_size), (sx + play_width, sy + i * block_size )
+        for j in range(len(grid[i])):
+            #drawing horizontal lines
+            pygame.draw.line(surface, (128, 128, 128), (sx + j * block_size, sy), (sx + j * block_size, sy + play_height)
+
+
     
  
 def clear_rows(grid, locked):
@@ -204,12 +209,18 @@ def draw_window(surface, grid):
     #label placement (x, y) change! clean up formula
     surface.blit(label, (top_left_x + play_width/2 - label.get_width()/2, 30))
 
+    for i in range(len(grid[i])):
+        #pygame.draw.rect(surface, colour, coordinates-start at 0,0 (top left x/y) and move 30 to the right or down based on which square (j/i) we are on, width, height, fill)
+        pygame.draw.rect(surface, grid[i][j], top_left_x + j*block_size, top_left_y + i*block_size, block_size, block_size, 0))
+
+    #draw border rectangle (surface, colour, (coordinatesx, y, width, height), border size)
+    pygame.draw.rect(surface, (255, 0, 0), (top_left_x, top_left_y, play_width, play_height), 4)
     draw_grid(surface, grid)
 
     #update screen
     pygame.display.update()
  
-def main():
+def main(win):
     locked_position = {}
     grid = create(grid(locked_positions)
 
@@ -250,12 +261,15 @@ def main():
                     current_piece.rotation += 1
                     if not(valid_space(current_piece, grid)):
                         current_piece.rotation -=1
-        draw_window(surface, grid)
+        draw_window(win, grid)
 
  
 def main_menu():
-    pass
- 
+    main(win)
+    
+
+
+ # returns a pygame.Surface represnting the window on the screen
  win = pygame.display.set_mode((s_width, s_height))
  pygame.display.set_caption("Tetris")
 main_menu()  # start game
