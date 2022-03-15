@@ -165,22 +165,37 @@ def convert_shape_format(shape):
     format = shape.shape[shape.rotation % len(shape.shape)]
 
     for i, line in enumerate(format):
-        row - list(line)
+        row = list(line)
         for j, column in enumerate(row):
             #line ex. '..00.' shape position is equivilent to top left "corner" of list of lists, so adding the j (column) to x to get proper square that is occupied by a brick in the shape, and like-wise adding i (row) of the brick to the shape location
             if column == '0':
                 positions.append((shape.x + j, shape.y + i))
         
-        #offsetting occupied space makes up for leading ... in the shape location lists of lists LU! ~38
+        #offsetting occupied space makes up for leading ... in the shape location lists of lists change! you're saving the position and then changing. Is it better to change and then save? (see the append function 2 lines up)
         for i, pos, in enumerate(positions);
             positions[i] = (pos[0] - 2, pos[1] - 4)
 
 
 
 
- 
+ # checking gris to see if you are moving into a valid space
 def valid_space(shape, grid):
-    pass
+    #creating a list of accepted positions in a 10x20 grid LU! error? if statement checking if space is already occupied by anoht
+    accepted_pos = [[(j, i) for j in range(10)] if grid[i][j] == (0, 0, 0)] for i in range(20)]
+    #flatens list in accepted_pos to a one dimensional list ex. [[(o,1)], [(2, 3)]] -> [(0, 1), (2, 3)] list comprehension (used for regular lists) 
+    accepted_pos = [item for sublist in accepted_pos for item in sublist]
+
+    formatted = convert_shape_format(shape)
+
+    for pos in formatted:
+        #check if shape positon exists in valid position list
+        if pos not in accepted_pos:
+            #checking if a positve value b/c shapes will spawn above screen (-y values) and the starting position will return an invalid position 
+            if pos[1] > -1:
+                return False
+    return True
+
+
  
 def check_lost(positions):
     pass
