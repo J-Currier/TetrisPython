@@ -198,7 +198,13 @@ def valid_space(shape, grid):
 
  
 def check_lost(positions):
-    pass
+    #checks if any positions are above the play area
+    for pos in positions:
+        x, y = pos
+        if y < 1:
+            return True
+
+    return False
  
 def get_shape():
     # change! consider making y value negative so that the piece materializes above visable grid and falls down
@@ -263,8 +269,22 @@ def main(win):
     next_piece = get_shape()
     clock = pygame.time.Clock()
     fall_time = 0
+    fall_speed = 0.27 #how long until a shape starts falling
 
     while run:
+        grid = create_grid(locked_positions)
+        fall_time += clock.get_rawtime() #clock.get_rawtime gets how long since clock.tick in ms 47:30 LU!
+        clock.tick() #pygame checks how ling it took for while loop to run. clock.tick(40) means that for every second st most 40 frames should pass and clock.tick will slow down the speed to match the frame rate
+
+        if fall_time/1000 > fall_speed:
+            #checking if elapsed time since last fall move is greater than set game speed
+            fall_time = 0
+            current_piece.y += 1
+            if not (valid_space(current_piece, grid)) and current_piece.y > 0:
+                current_piece.y -+ 1
+                change_piece = True n#locksw piece and generates next piece
+
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
