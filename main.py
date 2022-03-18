@@ -271,6 +271,7 @@ def main(win):
     fall_time = 0
     fall_speed = 0.27 #how long until a shape starts falling
 
+    #running the game:
     while run:
         grid = create_grid(locked_positions)
         fall_time += clock.get_rawtime() #clock.get_rawtime gets how long since clock.tick in ms 47:30 LU!
@@ -314,7 +315,34 @@ def main(win):
                     current_piece.rotation += 1
                     if not(valid_space(current_piece, grid)):
                         current_piece.rotation -=1
+
+
+        #check piece as it's moving down
+        shape_pos = convert_shape_format(current_piece)
+        for i in range (len(shape_pos)):
+                x, y = shape_pos[i]
+                if y > -1:
+                    #error? y, x  vs x, y
+                    grid[y][x] = current_piece.color
+        
+        if change_piece: 
+            #stores locked position piece coordinates as key in locked_pos dictionary with value of fill coloor of square
+            for pos in shape_pos:
+                p = (pos[0], pos[1])
+                locked_positions[p] = current_piece.color
+                current_piece = next_piece
+                next_piece = get_shape()
+                change_piece = False
+
+
         draw_window(win, grid)
+
+        if check_lost(locked_positions):
+            run = False
+
+    pygame.display.quit()
+
+
 
  
 def main_menu():
