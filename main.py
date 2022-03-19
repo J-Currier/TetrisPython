@@ -31,107 +31,107 @@ top_left_y = s_height - play_height
  
 # SHAPE FORMATS
  
-S = [[\'.....\',
-      \'......\',
-      \'..00..\',
-      \'.00...\',
-      \'.....\'],
-     [\'.....\',
-      \'..0..\',
-      \'..00.\',
-      \'...0.\',
-      \'.....\']]
- 
-Z = [[\'.....\',
-      \'.....\',
-      \'.00..\',
-      \'..00.\',
-      \'.....\'],
-     [\'.....\',
-      \'..0..\',
-      \'.00..\',
-      \'.0...\',
-      \'.....\']]
- 
-I = [[\'..0..\',
-      \'..0..\',
-      \'..0..\',
-      \'..0..\',
-      \'.....\'],
-     [\'.....\',
-      \'0000.\',
-      \'.....\',
-      \'.....\',
-      \'.....\']]
- 
-O = [[\'.....\',
-      \'.....\',
-      \'.00..\',
-      \'.00..\',
-      \'.....\']]
- 
-J = [[\'.....\',
-      \'.0...\',
-      \'.000.\',
-      \'.....\',
-      \'.....\'],
-     [\'.....\',
-      \'..00.\',
-      \'..0..\',
-      \'..0..\',
-      \'.....\'],
-     [\'.....\',
-      \'.....\',
-      \'.000.\',
-      \'...0.\',
-      \'.....\'],
-     [\'.....\',
-      \'..0..\',
-      \'..0..\',
-      \'.00..\',
-      \'.....\']]
- 
-L = [[\'.....\',
-      \'...0.\',
-      \'.000.\',
-      \'.....\',
-      \'.....\'],
-     [\'.....\',
-      \'..0..\',
-      \'..0..\',
-      \'..00.\',
-      \'.....\'],
-     [\'.....\',
-      \'.....\',
-      \'.000.\',
-      \'.0...\',
-      \'.....\'],
-     [\'.....\',
-      \'.00..\',
-      \'..0..\',
-      \'..0..\',
-      \'.....\']]
- 
-T = [[\'.....\',
-      \'..0..\',
-      \'.000.\',
-      \'.....\',
-      \'.....\'],
-     [\'.....\',
-      \'..0..\',
-      \'..00.\',
-      \'..0..\',
-      \'.....\'],
-     [\'.....\',
-      \'.....\',
-      \'.000.\',
-      \'..0..\',
-      \'.....\'],
-     [\'.....\',
-      \'..0..\',
-      \'.00..\',
-      \'..0..\',
-      \'.....\']]
+S = [['.....',
+      '.....',
+      '..00.',
+      '.00..',
+      '.....'],
+     ['.....',
+      '..0..',
+      '..00.',
+      '...0.',
+      '.....']]
+
+Z = [['.....',
+      '.....',
+      '.00..',
+      '..00.',
+      '.....'],
+     ['.....',
+      '..0..',
+      '.00..',
+      '.0...',
+      '.....']]
+
+I = [['..0..',
+      '..0..',
+      '..0..',
+      '..0..',
+      '.....'],
+     ['.....',
+      '0000.',
+      '.....',
+      '.....',
+      '.....']]
+
+O = [['.....',
+      '.....',
+      '.00..',
+      '.00..',
+      '.....']]
+
+J = [['.....',
+      '.0...',
+      '.000.',
+      '.....',
+      '.....'],
+     ['.....',
+      '..00.',
+      '..0..',
+      '..0..',
+      '.....'],
+     ['.....',
+      '.....',
+      '.000.',
+      '...0.',
+      '.....'],
+     ['.....',
+      '..0..',
+      '..0..',
+      '.00..',
+      '.....']]
+
+L = [['.....',
+      '...0.',
+      '.000.',
+      '.....',
+      '.....'],
+     ['.....',
+      '..0..',
+      '..0..',
+      '..00.',
+      '.....'],
+     ['.....',
+      '.....',
+      '.000.',
+      '.0...',
+      '.....'],
+     ['.....',
+      '.00..',
+      '..0..',
+      '..0..',
+      '.....']]
+
+T = [['.....',
+      '..0..',
+      '.000.',
+      '.....',
+      '.....'],
+     ['.....',
+      '..0..',
+      '..00.',
+      '..0..',
+      '.....'],
+     ['.....',
+      '.....',
+      '.000.',
+      '..0..',
+      '.....'],
+     ['.....',
+      '..0..',
+      '.00..',
+      '..0..',
+      '.....']]
  
 shapes = [S, Z, I, O, J, L, T]
 shape_colors = [(0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 165, 0), (0, 0, 255), (128, 0, 128)]
@@ -143,18 +143,18 @@ class Piece(object):
         self.x = x
         self.y = y
         self.shape = shape
-        self.color = shape_colors[shape.index(shape)]
+        self.color = shape_colors[shapes.index(shape)]
         self.rotation = 0
  
 def create_grid(locked_positions={}):
     #(0, 0, 0,) black create a list of ten (width) for each row (20)
     #columns = j, rows = i 
-    grid = [[(0, 0, 0)for x in range(10) for x in range(20)]
+    grid = [[(0, 0, 0)for x in range(10)] for x in range(20)]
 
     for i in range(len(grid)):
         for j in range(len(grid[i])):
-            if(j, i) in locked_pos:
-                c = locked_pos[j, i)]
+            if(j, i) in locked_positions:
+                c = locked_positions[(j, i)]
                 grid[i][j] = c
     return grid
  
@@ -172,8 +172,10 @@ def convert_shape_format(shape):
                 positions.append((shape.x + j, shape.y + i))
         
         #offsetting occupied space makes up for leading ... in the shape location lists of lists change! you're saving the position and then changing. Is it better to change and then save? (see the append function 2 lines up)
-        for i, pos, in enumerate(positions);
+        for i, pos, in enumerate(positions):
             positions[i] = (pos[0] - 2, pos[1] - 4)
+
+    return positions
 
 
 
@@ -181,7 +183,7 @@ def convert_shape_format(shape):
  # checking gris to see if you are moving into a valid space
 def valid_space(shape, grid):
     #creating a list of accepted positions in a 10x20 grid LU! error? if statement checking if space is already occupied by anoht
-    accepted_pos = [[(j, i) for j in range(10)] if grid[i][j] == (0, 0, 0)] for i in range(20)]
+    accepted_pos = [[(j, i) for j in range(10) if grid[i][j] == (0, 0, 0)] for i in range(20)]
     #flatens list in accepted_pos to a one dimensional list ex. [[(o,1)], [(2, 3)]] -> [(0, 1), (2, 3)] list comprehension (used for regular lists) 
     accepted_pos = [item for sublist in accepted_pos for item in sublist]
 
@@ -221,18 +223,20 @@ def draw_grid(surface, grid):
 
     for i in range(len(grid)):
         #change! check formula. Drawing Vertical lines
-        pygame.draw.line(surface, (128, 128, 128), (sx, sy + i * block_size), (sx + play_width, sy + i * block_size )
+        pygame.draw.line(surface, (128, 128, 128), (sx, sy + i * block_size), (sx + play_width, sy + i * block_size ))
         for j in range(len(grid[i])):
             #drawing horizontal lines
-            pygame.draw.line(surface, (128, 128, 128), (sx + j * block_size, sy), (sx + j * block_size, sy + play_height)
+            pygame.draw.line(surface, (128, 128, 128), (sx + j * block_size, sy), (sx + j * block_size, sy + play_height))
 
 
     
  
 def clear_rows(grid, locked):
+    pass
  
  
 def draw_next_shape(shape, surface):
+    pass
  
  
 def draw_window(surface, grid):
@@ -241,16 +245,17 @@ def draw_window(surface, grid):
 
     #set up font, (font name, size) change! font
     pygame.font.init()
-    font = pygame.font.Sysfont('comicsans', 60)
+    font = pygame.font.SysFont('comicsans', 60)
 
     label = font.render("Tetris", 1, (255, 255, 255))
     
     #label placement (x, y) change! clean up formula
     surface.blit(label, (top_left_x + play_width/2 - label.get_width()/2, 30))
 
-    for i in range(len(grid[i])):
+    for i in range(len(grid)):
         #pygame.draw.rect(surface, colour, coordinates-start at 0,0 (top left x/y) and move 30 to the right or down based on which square (j/i) we are on, width, height, fill)
-        pygame.draw.rect(surface, grid[i][j], top_left_x + j*block_size, top_left_y + i*block_size, block_size, block_size, 0))
+        for j in range(len(grid[i])):
+            pygame.draw.rect(surface, grid[i][j], (top_left_x + j*block_size, top_left_y + i*block_size, block_size, block_size), 0)
 
     #draw border rectangle (surface, colour, (coordinatesx, y, width, height), border size)
     pygame.draw.rect(surface, (255, 0, 0), (top_left_x, top_left_y, play_width, play_height), 4)
@@ -260,8 +265,8 @@ def draw_window(surface, grid):
     pygame.display.update()
  
 def main(win):
-    locked_position = {}
-    grid = create(grid(locked_positions)
+    locked_positions = {}
+    grid = create_grid(locked_positions)
 
     change_piece = False
     run = True
@@ -283,7 +288,7 @@ def main(win):
             current_piece.y += 1
             if not (valid_space(current_piece, grid)) and current_piece.y > 0:
                 current_piece.y -+ 1
-                change_piece = True n#locksw piece and generates next piece
+                change_piece = True #locksw piece and generates next piece
 
 
         for event in pygame.event.get():
@@ -317,9 +322,11 @@ def main(win):
                         current_piece.rotation -=1
 
 
-        #check piece as it's moving down
+        #check and update grid as piece is moving down
         shape_pos = convert_shape_format(current_piece)
+
         for i in range (len(shape_pos)):
+            #error? check x
                 x, y = shape_pos[i]
                 if y > -1:
                     #error? y, x  vs x, y
@@ -351,6 +358,6 @@ def main_menu():
 
 
  # returns a pygame.Surface represnting the window on the screen
- win = pygame.display.set_mode((s_width, s_height))
- pygame.display.set_caption("Tetris")
+win = pygame.display.set_mode((s_width, s_height))
+pygame.display.set_caption("Tetris")
 main_menu()  # start game
