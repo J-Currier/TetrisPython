@@ -1,15 +1,6 @@
 import pygame
 import random
  
-# creating the data structure for pieces
-# setting up global vars
-# functions
-# - create_grid
-# - draw_grid
-# - draw_window
-# - rotating shape in main
-# - setting up the main
- 
 """
 10 x 20 square grid
 shapes: S, Z, I, O, J, L, T
@@ -132,7 +123,7 @@ T = [['.....',
       '.00..',
       '..0..',
       '.....']]
- 
+
 shapes = [S, Z, I, O, J, L, T]
 shape_colors = [(0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 165, 0), (0, 0, 255), (128, 0, 128)]
 # index 0 - 6 represent shape
@@ -149,7 +140,7 @@ class Piece(object):
 def create_grid(locked_positions={}):
     #(0, 0, 0,) black create a list of ten (width) for each row (20)
     #columns = j, rows = i 
-    grid = [[(0, 0, 0)for x in range(10)] for x in range(20)]
+    grid = [[(0, 0, 0) for x in range(10)] for x in range(20)]
 
     for i in range(len(grid)):
         for j in range(len(grid[i])):
@@ -250,7 +241,7 @@ def draw_window(surface, grid):
     label = font.render("Tetris", 1, (255, 255, 255))
     
     #label placement (x, y) change! clean up formula
-    surface.blit(label, (top_left_x + play_width/2 - label.get_width()/2, 30))
+    surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), 30))
 
     for i in range(len(grid)):
         #pygame.draw.rect(surface, colour, coordinates-start at 0,0 (top left x/y) and move 30 to the right or down based on which square (j/i) we are on, width, height, fill)
@@ -278,6 +269,8 @@ def main(win):
 
     #running the game:
     while run:
+        fall_speed = 0.27
+
         grid = create_grid(locked_positions)
         fall_time += clock.get_rawtime() #clock.get_rawtime gets how long since clock.tick in ms 47:30 LU!
         clock.tick() #pygame checks how ling it took for while loop to run. clock.tick(40) means that for every second st most 40 frames should pass and clock.tick will slow down the speed to match the frame rate
@@ -287,7 +280,7 @@ def main(win):
             fall_time = 0
             current_piece.y += 1
             if not (valid_space(current_piece, grid)) and current_piece.y > 0:
-                current_piece.y -+ 1
+                current_piece.y -= 1
                 change_piece = True #locksw piece and generates next piece
 
 
@@ -300,25 +293,26 @@ def main(win):
                 if event.key == pygame.K_LEFT:
                     current_piece.x -= 1
                     #check if piece will be in a valid position on the game board
-                    if not(valid_space(current_piece, grid)):
+                    if not valid_space(current_piece, grid):
                         current_piece.x +=1
 
                 # move piece right
-                if event.key == pygame.K_RIGHT:
+                elif event.key == pygame.K_RIGHT:
                     current_piece.x += 1
-                    if not(valid_space(current_piece, grid)):
-                        current_piece.x -=1
+                    if not valid_space(current_piece, grid):
+                            current_piece.x -=1
 
                 # move piece down
-                if event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_DOWN:
                     current_piece.y += 1
-                    if not(valid_space(current_piece, grid)):
+                    if not valid_space(current_piece, grid):
                         current_piece.y -=1
 
                 # rotate piece
                 if event.key == pygame.K_UP:
+                    #error? 
                     current_piece.rotation += 1
-                    if not(valid_space(current_piece, grid)):
+                    if not valid_space(current_piece, grid):
                         current_piece.rotation -=1
 
 
@@ -333,7 +327,7 @@ def main(win):
                     grid[y][x] = current_piece.color
         
         if change_piece: 
-            #stores locked position piece coordinates as key in locked_pos dictionary with value of fill coloor of square
+            #stores locked position piece coordinates as key in locked_pos dictionary with value of fill colour of square
             for pos in shape_pos:
                 p = (pos[0], pos[1])
                 locked_positions[p] = current_piece.color
