@@ -221,15 +221,35 @@ def draw_grid(surface, grid):
 
 
     
- 
+# !change /error?  edge case two rows deleted with an intact/undeleted row inthe middle check to see if this works
 def clear_rows(grid, locked):
-    pass
- 
+    inc = 0
+    #loops through grid backwards
+    for i in range(len(grid)-1, -1, -1):
+        row = grid[i]
+        #if no black squares
+        if (0, 0, 0) not in row: 
+            inc += 1
+            ind = i
+            for j in range(len(row)):
+                #i stays static - same row
+                try:
+                    #deleting filled position from locked dictionary
+                    del locked[(j, i)]
+                except: 
+                    continue
+    if inc > 0:
+        for key in sorted(list(locked), key = lambda x: x[1]) [::-1]: #key.... sorts list by y value list ex. [(0, 1), (0, 0)] --> [(0, 0), (0, 1)]
+            x, y = key # key is a tuple
+            #if y value is ABOVE line deleted (ind)
+            if y < ind:
+                newKey = (x, y + inc)
+                locked[newKey] = locked.pop(key)
  
 def draw_next_shape(shape, surface):
     font = pygame.font.SysFont('commicsans', 30)
     label = font.render("Next Shape:", 1, (255, 255, 255))
-#! change playw with constants to see where it looks best on screen
+#! change play with constants to see where it looks best on screen
     sx= top_left_x + play_width + 50
     sy = top_left_y + play_height/2 + 100
     format = shape.shape[shape.rotation % len(shape.shape)]
@@ -262,11 +282,12 @@ def draw_window(surface, grid):
             pygame.draw.rect(surface, grid[i][j], (top_left_x + j*block_size, top_left_y + i*block_size, block_size, block_size), 0)
 
     #draw border rectangle (surface, colour, (coordinatesx, y, width, height), border size)
+    
     pygame.draw.rect(surface, (255, 0, 0), (top_left_x, top_left_y, play_width, play_height), 4)
     draw_grid(surface, grid)
 
-    #update screen
-    pygame.display.update()
+    #update screen change! commented out when added in draw next pieceand called it
+    #pygame.display.update()
  
 def main(win):
     locked_positions = {}
@@ -347,9 +368,13 @@ def main(win):
             current_piece = next_piece
             next_piece = get_shape()
             change_piece = False
-
+            #only call clear rows after piece has become stationary
+            clear_rows(grid, locked_positions)
 
         draw_window(win, grid)
+        draw_next_shape(next_piece, win)
+        pygame.display.update()
+
 
         if check_lost(locked_positions):
             run = False
