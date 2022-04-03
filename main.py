@@ -205,10 +205,10 @@ def get_shape():
  
  
 def draw_text_middle(surface, text, size, color):
-    font = pygame.font.SysFont("comicsans", sixe, bold = True)
+    font = pygame.font.SysFont("comicsans", size, bold = True)
     label = font.render(text, 1, color)
 
-    surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2, top_left_y + play_height/2 - label.get_height()/2)))  
+    surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), top_left_y + play_height/2 - label.get_height()/2))  
 
    
 def draw_grid(surface, grid):
@@ -345,8 +345,10 @@ def main(win):
 
 
         for event in pygame.event.get():
+            #pygame.QUIT = x to close window
             if event.type == pygame.QUIT:
                 run = False
+                pygame.display.quit
 
             if event.type == pygame.KEYDOWN:
                 # move piece left
@@ -418,13 +420,13 @@ def main_menu(win):
     run = True
     while run:
         win.fill((0, 0, 0))
-        draw_text_middle("Press any key to play", 60, (255, 255, 255))
+        draw_text_middle(win, "Press any key to play", 60, (255, 255, 255))
         pygame.display.update()
-        for event.type in pygame.event.get():
+        for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
             if event.type == pygame.KEYDOWN:
-                main()
+                main(win)
 
     
     pygame.display.quit()
@@ -435,4 +437,4 @@ def main_menu(win):
  # returns a pygame.Surface represnting the window on the screen
 win = pygame.display.set_mode((s_width, s_height))
 pygame.display.set_caption("Tetris")
-main_menu()  # start game
+main_menu(win)  # start game
