@@ -408,14 +408,27 @@ def main(win):
             pygame.time.delay(1500)
             run = False
 
-    #exit game
-    pygame.display.quit()
+    #exit game delete !change
+    #pygame.display.quit()
 
 
 
  
-def main_menu():
-    main(win)
+def main_menu(win):
+    run = True
+    while run:
+        win.fill((0, 0, 0))
+        draw_text_middle("Press any key to play", 60, (255, 255, 255))
+        pygame.display.update()
+        for event.type in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            if event.type == pygame.KEYDOWN:
+                main()
+
+    
+    pygame.display.quit()
+
     
 
 
