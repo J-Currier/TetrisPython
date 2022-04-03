@@ -245,6 +245,8 @@ def clear_rows(grid, locked):
             if y < ind:
                 newKey = (x, y + inc)
                 locked[newKey] = locked.pop(key)
+    #rows cleared to use for score
+    return inc 
  
 def draw_next_shape(shape, surface):
     font = pygame.font.SysFont('commicsans', 30)
@@ -263,7 +265,7 @@ def draw_next_shape(shape, surface):
 #!change change constants to alter appearance
     surface.blit(label, (sx + 10, sy - 30))
  
-def draw_window(surface, grid):
+def draw_window(surface, grid, score = 0): #score default paramter is zero
     #fill with black
     surface.fill((0, 0, 0))
 
@@ -275,6 +277,16 @@ def draw_window(surface, grid):
     
     #label placement (x, y) change! clean up formula
     surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), 30))
+
+    #for displaying score
+    font = pygame.font.SysFont('commicsans', 30)
+    label = font.render("Score: " + str(score), 1, (255, 255, 255))
+#!change play with constants to see where it looks best on screen
+    sx= top_left_x + play_width + 50
+    sy = top_left_y + play_height/2 + 100
+    #!change placement to see what looks best
+    surface.blit(label, (sx + 20, sy + 160))
+
 
     for i in range(len(grid)):
         #pygame.draw.rect(surface, colour, coordinates-start at 0,0 (top left x/y) and move 30 to the right or down based on which square (j/i) we are on, width, height, fill)
@@ -300,6 +312,8 @@ def main(win):
     clock = pygame.time.Clock()
     fall_time = 0
     fall_speed = 0.27 #how long until a shape starts falling
+    level_time = 0
+    score = 0
 
     #running the game:
     while run:
@@ -307,7 +321,15 @@ def main(win):
 
         grid = create_grid(locked_positions)
         fall_time += clock.get_rawtime() #clock.get_rawtime gets how long since clock.tick in ms 47:30 LU!
+        level_time =+ clock.get_rawtime()
         clock.tick() #pygame checks how ling it took for while loop to run. clock.tick(40) means that for every second st most 40 frames should pass and clock.tick will slow down the speed to match the frame rate
+
+        if level_time/1000 > 5:
+            level_time = 0
+            #~1:20 should be fall time !error
+            if level_time > 0.12:
+                level_time -= 0.005 #time change
+
 
         if fall_time/1000 > fall_speed:
             #checking if elapsed time since last fall move is greater than set game speed
@@ -369,9 +391,9 @@ def main(win):
             next_piece = get_shape()
             change_piece = False
             #only call clear rows after piece has become stationary
-            clear_rows(grid, locked_positions)
+            score += clear_rows(grid, locked_positions) * 10
 
-        draw_window(win, grid)
+        draw_window(win, grid, score)
         draw_next_shape(next_piece, win)
         pygame.display.update()
 
