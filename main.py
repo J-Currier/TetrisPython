@@ -21,7 +21,7 @@ top_left_y = s_height - play_height
  
  
 # SHAPE FORMATS
- 
+
 S = [['.....',
       '.....',
       '..00.',
@@ -130,12 +130,17 @@ shape_colors = [(0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 16
  
  
 class Piece(object):
-    def __init__(self, x, y, shape):
-        self.x = x
-        self.y = y
+    rows =20 #y
+    columns = 10 #x
+
+
+    def __init__(self, column, row, shape):
+        self.x = column
+        self.y = row
         self.shape = shape
         self.color = shape_colors[shapes.index(shape)]
-        self.rotation = 0
+        self.rotation = 0  # number from 0-3
+
  
 def create_grid(locked_positions={}):
     #(0, 0, 0,) black create a list of ten (width) for each row (20)
@@ -162,9 +167,9 @@ def convert_shape_format(shape):
             if column == '0':
                 positions.append((shape.x + j, shape.y + i))
         
-        #offsetting occupied space makes up for leading ... in the shape location lists of lists change! you're saving the position and then changing. Is it better to change and then save? (see the append function 2 lines up)
-        for i, pos, in enumerate(positions):
-            positions[i] = (pos[0] - 2, pos[1] - 4)
+    #offsetting occupied space makes up for leading ... in the shape location lists of lists change! you're saving the position and then changing. Is it better to change and then save? (see the append function 2 lines up)
+    for i, pos, in enumerate(positions):
+        positions[i] = (pos[0] - 2, pos[1] - 4)
 
     return positions
 
@@ -200,6 +205,8 @@ def check_lost(positions):
     return False
  
 def get_shape():
+    global shapes, shape_colors
+
     # change! consider making y value negative so that the piece materializes above visable grid and falls down
     return Piece(5, 0, random.choice(shapes))
  
@@ -211,15 +218,15 @@ def draw_text_middle(surface, text, size, color):
     surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), top_left_y + play_height/2 - label.get_height()/2))  
 
    
-def draw_grid(surface, grid):
+def draw_grid(surface, row, col):
     # draws lines on grid
     sx = top_left_x
     sy = top_left_y
 
-    for i in range(len(grid)):
+    for i in range(row):
         #change! check formula. Drawing Vertical lines
         pygame.draw.line(surface, (128, 128, 128), (sx, sy + i * block_size), (sx + play_width, sy + i * block_size ))
-        for j in range(len(grid[i])):
+        for j in range(col):
             #drawing horizontal lines
             pygame.draw.line(surface, (128, 128, 128), (sx + j * block_size, sy), (sx + j * block_size, sy + play_height))
 
@@ -256,8 +263,8 @@ def draw_next_shape(shape, surface):
     font = pygame.font.SysFont('commicsans', 30)
     label = font.render("Next Shape:", 1, (255, 255, 255))
 #! change play with constants to see where it looks best on screen
-    sx= top_left_x + play_width + 50
-    sy = top_left_y + play_height/2 + 100
+    sx = top_left_x + play_width + 50
+    sy = top_left_y + play_height/2 - 100
     format = shape.shape[shape.rotation % len(shape.shape)]
 
     for i, line in enumerate(format):
@@ -330,13 +337,16 @@ def draw_window(surface, grid, score = 0, last_score = 0): #score default paramt
 
     #draw border rectangle (surface, colour, (coordinatesx, y, width, height), border size)
     
-    pygame.draw.rect(surface, (255, 0, 0), (top_left_x, top_left_y, play_width, play_height), 4)
-    draw_grid(surface, grid)
+    draw_grid(surface, 20, 10)
+    pygame.draw.rect(surface, (255, 0, 0), (top_left_x, top_left_y, play_width, play_height), 5)
+    
 
     #update screen change! commented out when added in draw next pieceand called it
     #pygame.display.update()
  
 def main(win):
+    global grid
+
     last_score = max_score()
     locked_positions = {}
     grid = create_grid(locked_positions)
@@ -360,14 +370,14 @@ def main(win):
         level_time =+ clock.get_rawtime()
         clock.tick() #pygame checks how ling it took for while loop to run. clock.tick(40) means that for every second st most 40 frames should pass and clock.tick will slow down the speed to match the frame rate
 
-        if level_time/1000 > 5:
+        if fall_time/1000 > 5:
             level_time = 0
             #~1:20 should be fall time !error
             if level_time > 0.12:
                 level_time -= 0.005 #time change
 
 
-        if fall_time/1000 > fall_speed:
+        if fall_time/1000 >= fall_speed:
             #checking if elapsed time since last fall move is greater than set game speed
             fall_time = 0
             current_piece.y += 1
@@ -403,11 +413,11 @@ def main(win):
                         current_piece.y -=1
 
                 # rotate piece
-                if event.key == pygame.K_UP:
-                    #error? 
-                    current_piece.rotation += 1
+                elif event.key == pygame.K_UP:
+                    #error?  fixed?!
+                    current_piece.rotation = current_piece.rotation + 1 % len(current_piece.shape)
                     if not valid_space(current_piece, grid):
-                        current_piece.rotation -=1
+                        current_piece.rotation = current_piece.rotation + 1 % len(current_piece.shape)
 
 
         #check and update grid as piece is moving down
