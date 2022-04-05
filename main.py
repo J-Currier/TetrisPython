@@ -213,9 +213,10 @@ def get_shape():
  
 def draw_text_middle(surface, text, size, color):
     font = pygame.font.SysFont("comicsans", size, bold = True)
-    label = font.render(text, 1, color)
+    banner = font.render(text, 1, color)
+    banner_rect = banner.get_rect(center = (s_width/2, (s_height/2)* .9))
 
-    surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), top_left_y + play_height/2 - label.get_height()/2))  
+    surface.blit(banner, banner_rect)  
 
    
 def draw_grid(surface, row, col):
