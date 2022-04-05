@@ -18,6 +18,8 @@ block_size = 30
  
 top_left_x = (s_width - play_width) // 2
 top_left_y = s_height - play_height
+
+main_menu_bg = pygame.image.load("mainMenuBG.png")
  
  
 # SHAPE FORMATS
@@ -212,7 +214,7 @@ def get_shape():
  
  
 def draw_text_middle(surface, text, size, color):
-    font = pygame.font.SysFont("comicsans", size, bold = True)
+    font = pygame.font.Font("RubikGlitch-Regular.ttf", size, bold = True)
     banner = font.render(text, 1, color)
     banner_rect = banner.get_rect(center = (s_width/2, (s_height/2)* .9))
 
@@ -463,7 +465,7 @@ def main(win):
 def main_menu(win):
     run = True
     while run:
-        win.fill((0, 0, 0))
+        win.blit(main_menu_bg, (0, 0))
         draw_text_middle(win, "Press any key to play", 60, (255, 255, 255))
         pygame.display.update()
         for event in pygame.event.get():
@@ -480,5 +482,6 @@ def main_menu(win):
 
  # returns a pygame.Surface represnting the window on the screen
 win = pygame.display.set_mode((s_width, s_height))
+print(pygame.font.get_fonts())
 pygame.display.set_caption("Tetris")
 main_menu(win)  # start game
